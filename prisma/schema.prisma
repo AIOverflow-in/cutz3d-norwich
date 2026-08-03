@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model Booking {
+  id              String         @id @default(cuid())
+  reference       String         @unique
+  manageTokenHash String         @unique
+  customerName    String
+  email           String
+  phone           String
+  serviceId       String
+  serviceName     String
+  price           Int
+  duration        Int
+  startAt         DateTime       @db.Timestamptz(3)
+  endAt           DateTime       @db.Timestamptz(3)
+  notes           String?
+  status          BookingStatus  @default(PENDING)
+  notifiedAt      DateTime?      @db.Timestamptz(3)
+  createdAt       DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime       @updatedAt @db.Timestamptz(3)
+  events          BookingEvent[]
+
+  @@index([startAt, endAt])
+  @@index([status, startAt])
+  @@index([email])
+  @@index([phone])
+}
+
+model BookingEvent {
+  id         String         @id @default(cuid())
+  bookingId  String
+  booking    Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  type       String
+  fromStatus BookingStatus?
+  toStatus   BookingStatus?
+  details    Json?
+  actor      String
+  createdAt  DateTime       @default(now()) @db.Timestamptz(3)
+
+  @@index([bookingId, createdAt])
+}
+
+model AdminLoginToken {
+  id        String    @id @default(cuid())
+  email     String
+  tokenHash String    @unique
+  expiresAt DateTime  @db.Timestamptz(3)
+  usedAt    DateTime? @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+
+  @@index([email, createdAt])
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  email     String
+  tokenHash String   @unique
+  expiresAt DateTime @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([expiresAt])
+}
