@@ -21,7 +21,11 @@ test("customer can complete the booking interface", async ({ page }) => {
     return route.fulfill({ status: 201, json: { managementToken: "safe-test-token", booking: { id: "test", reference: "3D-TEST01", customerName: payload.customerName, email: payload.email, phone: payload.phone, serviceId: "skin-fade", serviceName: "Skin Fade", price: 22, duration: 45, date: payload.date, time: payload.time, status: "Pending", createdAt: new Date().toISOString() } } });
   });
   await page.goto("/book");
-  await page.getByRole("button", { name: /Skin Fade/ }).click();
+  const service = page.getByRole("button", { name: /Skin Fade/ });
+  await expect(async () => {
+    await service.click();
+    await expect(service).toHaveAttribute("aria-pressed", "true");
+  }).toPass();
   await page.getByRole("button", { name: /Continue/ }).click();
   await page.getByRole("button", { name: "09:00", exact: true }).click();
   await page.getByRole("button", { name: /Continue/ }).click();
@@ -34,9 +38,11 @@ test("customer can complete the booking interface", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Manage this booking" })).toHaveAttribute("href", "/manage?token=safe-test-token");
 });
 
-test("dashboard is protected and shows passwordless sign-in", async ({ page }) => {
+test("dashboard is protected and shows simple sign-in", async ({ page }) => {
   await page.goto("/dashboard");
   await expect(page).toHaveURL(/\/dashboard\/login$/);
   await expect(page.getByRole("heading", { name: "Salon dashboard" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Email my secure link/ })).toBeVisible();
+  await expect(page.getByLabel("Admin email")).toBeVisible();
+  await expect(page.getByLabel("Password")).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Sign in/ })).toBeVisible();
 });

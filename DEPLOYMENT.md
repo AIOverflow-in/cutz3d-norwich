@@ -26,7 +26,7 @@ The app stores booking tokens only as SHA-256 hashes, performs overlap checks in
 
 ## Dashboard access
 
-Set `ADMIN_EMAIL` to the salon owner's address. `/dashboard` redirects unauthenticated visitors to a passwordless login form. Links expire after 15 minutes; sessions are stored server-side, use an HttpOnly/SameSite cookie, and expire after seven days.
+Set `ADMIN_EMAIL` and a long, unique `ADMIN_PASSWORD`. `/dashboard` redirects unauthenticated visitors to the login form. Sessions are stored server-side, use an HttpOnly/SameSite cookie, and expire after seven days.
 
 For multiple staff members or granular permissions, replace the single-address allow-list with a proper users/roles table before adding them.
 

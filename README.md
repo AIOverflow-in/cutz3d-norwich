@@ -9,7 +9,7 @@ A production-ready website and online booking platform for **3D Cutz**, 19 Princ
 - Atomic booking conflict checks in Neon Postgres
 - Private management links plus reference-and-email recovery
 - Customer rescheduling and cancellation
-- Passwordless, email-only salon dashboard with booking status history
+- Email-and-password salon dashboard with protected sessions and booking status history
 - Resend notifications for booking and status events
 - Local SEO journal, sitemap, robots rules, Open Graph image and manifest
 - Scheduled OpenAI article generation through GitHub Actions
@@ -34,7 +34,7 @@ npx prisma db push
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The salon dashboard is at `/dashboard`; entering the authorised `ADMIN_EMAIL` sends a 15-minute magic link.
+Open [http://localhost:3000](http://localhost:3000). The salon dashboard is at `/dashboard`; sign in with the server-only `ADMIN_EMAIL` and `ADMIN_PASSWORD` values.
 
 ## Quality checks
 
@@ -55,7 +55,7 @@ Copy [.env.example](./.env.example). Important rules:
 - `DATABASE_URL`, `DIRECT_URL`, `RESEND_API_KEY` and `OPENAI_API_KEY` are server secrets.
 - Never prefix a secret with `NEXT_PUBLIC_`.
 - `EMAIL_FROM` should use a domain verified in Resend for production.
-- `ADMIN_EMAIL` is the only address permitted to request dashboard access.
+- `ADMIN_EMAIL` and `ADMIN_PASSWORD` protect dashboard access and must remain server-only.
 - Add `OPENAI_API_KEY` to GitHub Actions secrets as well as Vercel if the weekly workflow is enabled.
 
 ## Booking lifecycle

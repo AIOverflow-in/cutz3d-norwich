@@ -23,17 +23,3 @@ export async function sendBookingNotification(booking: DbBooking, event: "create
   if (result.error) throw new Error(result.error.message);
   return { sent: true, id: result.data?.id };
 }
-
-export async function sendAdminLoginEmail(email: string, loginUrl: string) {
-  const from = process.env.EMAIL_FROM;
-  if (!resend || !from) throw new Error("Email is not configured");
-  const result = await resend.emails.send({
-    from,
-    to: [email],
-    subject: "Your secure 3D Cutz dashboard link",
-    text: `Open this one-time link to sign in to the 3D Cutz dashboard. It expires in 15 minutes:\n\n${loginUrl}`,
-    html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#0c0d0c"><div style="background:#72ec31;padding:18px 22px;font-size:24px;font-weight:900">3D CUTZ</div><div style="padding:24px;border:1px solid #e1e4dd"><h1 style="font-size:24px">Dashboard sign-in</h1><p>This secure, one-time link expires in 15 minutes.</p><p style="margin:28px 0"><a href="${escapeHtml(loginUrl)}" style="background:#0c0d0c;color:#fff;padding:14px 20px;border-radius:999px;text-decoration:none;font-weight:700">Open booking dashboard</a></p><p style="font-size:13px;color:#667066">If you did not request this link, you can ignore this email.</p></div></div>`,
-  });
-  if (result.error) throw new Error(result.error.message);
-  return result.data;
-}

@@ -7,5 +7,5 @@ export const metadata: Metadata = { title: "Salon dashboard sign in", robots: { 
 
 export default async function DashboardLoginPage() {
   if (await getAdminSession()) redirect("/dashboard");
-  return <><section className="page-hero compact-hero"><div className="shell"><div className="page-badge">Authorised access</div><h1 className="section-title">Manage the chair.</h1><p className="section-copy">Secure access to bookings, client details and appointment status.</p></div></section><section className="manage-section"><div className="shell"><div className="manage-lookup"><AdminLoginForm /></div></div></section></>;
+  return <><section className="page-hero compact-hero"><div className="shell"><div className="page-badge">Authorised access</div><h1 className="section-title">Manage the chair.</h1><p className="section-copy">Sign in to manage bookings, client details and appointment status.</p></div></section><section className="manage-section"><div className="shell"><div className="manage-lookup"><AdminLoginForm /></div></div></section></>;
 }
